@@ -44,8 +44,8 @@ func custom_spawn(vars) -> Node:
 	
 	var p: Player = player_scene.instantiate()
 	p.set_multiplayer_authority(id)
+	p.call_deferred("set_position", pos)
 	p.name = str(id)
-	p.position = pos
 	
 	player_spawned.emit(id, p)
 	return p
