@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://cvl4jsitsxp0u"]
+[gd_scene load_steps=7 format=3 uid="uid://cvl4jsitsxp0u"]
 
 [ext_resource type="Script" path="res://ui/ui.gd" id="1_3uiwb"]
 [ext_resource type="Script" path="res://ui/mouse_mode.gd" id="2_rhohj"]
 [ext_resource type="Script" path="res://ui/player_panel_contiainer.gd" id="4_0te8w"]
 [ext_resource type="Resource" uid="uid://rclnl7v8k722" path="res://user_data/user_data_events.res" id="5_tmjbr"]
 [ext_resource type="PackedScene" uid="uid://dpre6ebljycx4" path="res://ui/player_panel.tscn" id="6_lta7j"]
+[ext_resource type="PackedScene" uid="uid://b8k7x2m9n4p5q" path="res://ui/exit_menu.tscn" id="7_exit_menu"]
 
 [node name="UI" type="Control"]
 layout_mode = 3
@@ -82,6 +83,8 @@ size_flags_horizontal = 3
 script = ExtResource("4_0te8w")
 user_data_events = ExtResource("5_tmjbr")
 player_panel = ExtResource("6_lta7j")
+
+[node name="ExitMenu" parent="." instance=ExtResource("7_exit_menu")]
 
 [connection signal="pressed" from="MainMenu/Buttons/Server" to="." method="start_server_emit"]
 [connection signal="pressed" from="MainMenu/Buttons/Client" to="." method="connect_client_emit"]

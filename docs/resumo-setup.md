@@ -114,4 +114,18 @@ Criados arquivos base em `shared/`:
 - Atualizar `game-design.md` se houver mudanças no design
 - Atualizar `arquitetura.md` se houver mudanças técnicas significativas
 - Manter `regras-projeto.md` atualizado com novas convenções
+- Atualizar `progresso-fase1.md` com progresso e correções
+
+## ⚠️ Correções Recentes
+
+### Plugin SQLite
+- Símbolo corrigido: `sqlite_library_init`
+- Caminho do framework macOS ajustado
+- Plugin instalado e configurado (v4.6)
+
+### Código
+- Conflito de nome `authentication_success` resolvido
+- `ConnectionServer` corrigido
+
+**Ver `progresso-fase1.md` para detalhes completos**
 

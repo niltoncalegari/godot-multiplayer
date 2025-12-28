@@ -1,0 +1,66 @@
+[configuration]
+
+entry_symbol = "sqlite_library_init"
+compatibility_minimum = "4.1"
+reloadable = true
+
+[dependencies]
+
+macos = { }
+windows.x86_64 = { }
+linux.x86_64 = { }
+
+web.wasm32.nothreads = {}
+web.wasm32 = {}
+
+android.arm32 = { }
+android.arm64 = { }
+android.x86_32 = { }
+android.x86_64 = { }
+
+ios = {}
+
+macos.template_release = { }
+windows.template_release.x86_64 = { }
+linux.template_release.x86_64 = { }
+
+web.template_release.wasm32.nothreads = { }
+web.template_release.wasm32 = { }
+
+android.template_release.arm32 = { }
+android.template_release.arm64 = { }
+android.template_release.x86_32 = { }
+android.template_release.x86_64 = { }
+
+ios.template_release = {}
+
+[libraries]
+
+macos = "bin/libgdsqlite.macos.template_debug.framework"
+windows.x86_64 = "bin/libgdsqlite.windows.template_debug.x86_64.dll"
+linux.x86_64 = "bin/libgdsqlite.linux.template_debug.x86_64.so"
+
+web.wasm32.nothreads = "bin/libgdsqlite.web.template_debug.wasm32.nothreads.wasm"
+web.wasm32 = "bin/libgdsqlite.web.template_debug.wasm32.wasm"
+
+android.arm32 = "bin/libgdsqlite.android.template_debug.arm32.so"
+android.arm64 = "bin/libgdsqlite.android.template_debug.arm64.so"
+android.x86_32 = "bin/libgdsqlite.android.template_debug.x86_32.so"
+android.x86_64 = "bin/libgdsqlite.android.template_debug.x86_64.so"
+
+ios = "bin/libgdsqlite.ios.template_debug.xcframework"
+
+macos.template_release = "bin/libgdsqlite.macos.template_release.framework"
+windows.template_release.x86_64 = "bin/libgdsqlite.windows.template_release.x86_64.dll"
+linux.template_release.x86_64 = "bin/libgdsqlite.linux.template_release.x86_64.so"
+
+web.template_release.wasm32.nothreads = "bin/libgdsqlite.web.template_release.wasm32.nothreads.wasm"
+web.template_release.wasm32 = "bin/libgdsqlite.web.template_release.wasm32.wasm"
+
+android.template_release.arm32 = "bin/libgdsqlite.android.template_release.arm32.so"
+android.template_release.arm64 = "bin/libgdsqlite.android.template_release.arm64.so"
+android.template_release.x86_32 = "bin/libgdsqlite.android.template_release.x86_32.so"
+android.template_release.x86_64 = "bin/libgdsqlite.android.template_release.x86_64.so"
+
+ios.template_release = "bin/libgdsqlite.ios.template_release.xcframework"
+

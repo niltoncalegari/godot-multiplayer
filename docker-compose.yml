@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  # Servidor do jogo (pode ser executado localmente ou no Docker)
+  # Para desenvolvimento, execute localmente
+  # Para produção, descomente e configure:
+  # game-server:
+  #   build: .
+  #   container_name: godot-multiplayer-server
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./server_data:/app/server_data
+  #   ports:
+  #     - "5050:5050"
+  #   environment:
+  #     - DATABASE_PATH=/app/server_data/game_database.db
+
+  # Volume para persistir dados do SQLite
+  # O banco SQLite será criado automaticamente pelo servidor
+  # e persistido no volume
+  server-data:
+    image: alpine:latest
+    container_name: godot-multiplayer-data
+    volumes:
+      - server_data:/app/server_data
+    command: /bin/sh -c "chmod 777 /app/server_data && tail -f /dev/null"
+
+volumes:
+  server_data:
+    driver: local
+
