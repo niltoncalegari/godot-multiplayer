@@ -1,0 +1,63 @@
+[gd_scene load_steps=9 format=3 uid="uid://server_main_scene"]
+
+[ext_resource type="Script" path="res://server/scripts/database/database_manager.gd" id="1_db_manager"]
+[ext_resource type="Script" path="res://server/scripts/database/database_config.gd" id="2_db_config"]
+[ext_resource type="Script" path="res://server/scripts/authentication/auth_manager.gd" id="3_auth_manager"]
+[ext_resource type="Script" path="res://server/scripts/character/character_manager.gd" id="4_char_manager"]
+[ext_resource type="Script" path="res://server/scripts/connection_server.gd" id="5_connection"]
+[ext_resource type="PackedScene" uid="uid://enpjmjm7ayyu" path="res://levels/hub_level.tscn" id="6_hub_level"]
+[ext_resource type="Script" uid="uid://4k8fb5pxls8n" path="res://main/player_spawner.gd" id="7_player_spawner"]
+[ext_resource type="PackedScene" uid="uid://ciqrpd5675boy" path="res://player/player.tscn" id="8_player_scene"]
+[ext_resource type="Script" uid="uid://bxld3dpqvf1jf" path="res://main/fall_checker.gd" id="9_fall_checker"]
+[ext_resource type="Script" path="res://server/scripts/database/test_database.gd" id="10_test_db"]
+
+[node name="Main" type="Node"]
+
+[node name="DatabaseManager" type="Node" parent="."]
+script = ExtResource("1_db_manager")
+
+[node name="DatabaseConfig" type="Node" parent="."]
+script = ExtResource("2_db_config")
+
+[node name="AuthManager" type="Node" parent="."]
+script = ExtResource("3_auth_manager")
+database_manager = NodePath("../DatabaseManager")
+
+[node name="CharacterManager" type="Node" parent="."]
+script = ExtResource("4_char_manager")
+database_manager = NodePath("../DatabaseManager")
+auth_manager = NodePath("../AuthManager")
+
+[node name="ConnectionServer" type="Node" parent="."]
+script = ExtResource("5_connection")
+port = 5050
+max_clients = 32
+auth_manager = NodePath("../AuthManager")
+character_manager = NodePath("../CharacterManager")
+database_manager = NodePath("../DatabaseManager")
+
+[node name="Players" type="Node3D" parent="."]
+
+[node name="PlayerSpawner" type="MultiplayerSpawner" parent="." node_paths=PackedStringArray("spawn_points")]
+_spawnable_scenes = PackedStringArray("uid://ciqrpd5675boy")
+spawn_path = NodePath("../Players")
+script = ExtResource("7_player_spawner")
+player_scene = ExtResource("8_player_scene")
+spawn_points = NodePath("../HubLevel/SpawnPoints")
+
+[node name="FallChecker" type="Node" parent="." node_paths=PackedStringArray("player_spawner")]
+script = ExtResource("9_fall_checker")
+fall_height = -20.0
+player_spawner = NodePath("../PlayerSpawner")
+
+[node name="TestDatabase" type="Node" parent="."]
+script = ExtResource("10_test_db")
+database_manager = NodePath("../DatabaseManager")
+
+[node name="HubLevel" parent="." instance=ExtResource("6_hub_level")]
+
+[connection signal="database_initialized" from="DatabaseManager" to="AuthManager" method="_on_database_ready"]
+[connection signal="database_initialized" from="DatabaseManager" to="TestDatabase" method="test_tables"]
+[connection signal="user_logged_in" from="AuthManager" to="ConnectionServer" method="_on_user_logged_in"]
+[connection signal="character_loaded" from="CharacterManager" to="ConnectionServer" method="_on_character_loaded"]
+

@@ -23,9 +23,15 @@ services:
     container_name: godot-multiplayer-data
     volumes:
       - server_data:/app/server_data
+      - ./server_data:/app/server_data_local  # Montagem local para acesso fácil
     command: /bin/sh -c "chmod 777 /app/server_data && tail -f /dev/null"
 
 volumes:
   server_data:
     driver: local
+    # Opcional: descomente para usar diretório local ao invés de volume
+    # driver_opts:
+    #   type: none
+    #   o: bind
+    #   device: ${PWD}/server_data
 

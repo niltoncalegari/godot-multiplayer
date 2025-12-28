@@ -1,0 +1,10 @@
+# Ignorar banco de dados (pode conter dados sensíveis)
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Manter o diretório no git
+!.gitignore
+!README.md
+

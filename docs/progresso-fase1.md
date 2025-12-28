@@ -52,14 +52,30 @@
 - ✅ Constantes do jogo (`shared/constants/`)
 - ✅ Enums (`shared/enums/`)
 - ✅ Classes de dados (`shared/classes/player_data.gd`)
+- ✅ ConnectionBase (`shared/classes/connection_base.gd`)
+
+### 5. Cena do Servidor
+- ✅ `main_server.tscn` criada
+- ✅ DatabaseManager integrado
+- ✅ AuthManager integrado
+- ✅ CharacterManager integrado
+- ✅ ConnectionServer integrado
+- ✅ PlayerSpawner integrado
+- ✅ FallChecker integrado
+- ✅ Script de teste de banco de dados
+
+### 6. Docker
+- ✅ `docker-compose.yml` configurado
+- ✅ Volume `server_data` criado
+- ✅ Container de dados rodando
 
 ## 🚧 Em Progresso
 
-### 1. Integração com Sistema de Conexão
-- ✅ RPCs de autenticação criados
-- ✅ ConnectionServer e ConnectionClient implementados
-- ✅ Fluxo de autenticação integrado
-- [ ] Testar fluxo completo
+### 1. Teste do Sistema
+- ✅ Cena do servidor criada
+- ✅ Docker Compose rodando
+- [ ] Testar criação de tabelas (executar servidor)
+- [ ] Verificar logs de inicialização
 
 ### 2. UI de Login/Registro
 - [ ] Criar cena de login
@@ -99,10 +115,12 @@ O banco de dados está em `user://game_database.db` (criado automaticamente).
 
 ## 🔄 Próximos Passos
 
-1. **Recarregar projeto no Godot** para aplicar correções do plugin SQLite
-2. **Criar UI de login**: Interface para usuários se autenticarem
-3. **Separar cenas**: Criar cenas distintas para cliente e servidor
-4. **Testar sistema**: Testar registro, login e salvamento de personagens
+1. ✅ **Cena do servidor criada** com todos os componentes
+2. ✅ **Docker Compose configurado** e volume criado
+3. **Testar criação de tabelas**: Executar servidor e verificar logs
+4. **Criar UI de login**: Interface para usuários se autenticarem
+5. **Criar cena do cliente**: Com UI de login integrada
+6. **Testar sistema completo**: Testar registro, login e salvamento de personagens
 
 ## 📊 Status Geral da Fase 1
 
@@ -110,8 +128,10 @@ O banco de dados está em `user://game_database.db` (criado automaticamente).
 - ✅ Autenticação: 95% (RPCs criados, falta UI)
 - ✅ Personagens: 80% (falta integração visual)
 - ✅ Conexão: 90% (RPCs criados, falta testar)
-- ⏳ Cenas separadas: 0%
+- ✅ Cena do servidor: 100% (criada com todos os componentes)
+- ✅ Docker: 100% (volume criado e configurado)
+- ⏳ Cena do cliente: 0%
 - ⏳ Exportação: 0%
 
-**Progresso Total: ~70%**
+**Progresso Total: ~75%**
 
