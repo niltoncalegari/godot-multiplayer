@@ -1,0 +1,13 @@
+{
+	"server": {
+		"host": "localhost",
+		"port": 5050,
+		"use_localhost_in_editor": true
+	},
+	"connection": {
+		"timeout_seconds": 10,
+		"reconnect_attempts": 3,
+		"reconnect_delay_seconds": 2
+	}
+}
+

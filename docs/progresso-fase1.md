@@ -129,9 +129,10 @@ O banco de dados está em `user://game_database.db` (criado automaticamente).
 - ✅ Personagens: 80% (falta integração visual)
 - ✅ Conexão: 90% (RPCs criados, falta testar)
 - ✅ Cena do servidor: 100% (criada com todos os componentes)
+- ✅ Cena do cliente: 100% (criada com UI de login)
+- ✅ UI de login: 100% (login e registro implementados)
 - ✅ Docker: 100% (volume criado e configurado)
-- ⏳ Cena do cliente: 0%
 - ⏳ Exportação: 0%
 
-**Progresso Total: ~75%**
+**Progresso Total: ~85%**
 

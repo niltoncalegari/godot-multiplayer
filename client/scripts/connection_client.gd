@@ -2,6 +2,7 @@ extends Node
 class_name ConnectionClient
 
 const ConnectionBase = preload("res://shared/classes/connection_base.gd")
+const ConfigManager = preload("res://shared/scripts/config_manager.gd")
 
 ## Gerenciador de conexão do cliente com autenticação
 
@@ -17,10 +18,24 @@ signal authentication_failed(reason: String)
 
 var is_authenticated: bool = false
 var character_data: Dictionary = {}
+var config: Dictionary = {}
 
 func _ready() -> void:
 	if ConnectionBase.is_server():
 		return
+	
+	# Carregar configurações externas
+	config = ConfigManager.load_client_config()
+	
+	# Aplicar configurações do arquivo (se disponíveis)
+	if config.has("server"):
+		var server_config = config.server
+		if server_config.has("host"):
+			host = server_config.host
+		if server_config.has("port"):
+			port = server_config.port
+		if server_config.has("use_localhost_in_editor"):
+			use_localhost_in_editor = server_config.use_localhost_in_editor
 	
 	# Conectar sinais de multiplayer
 	multiplayer.connected_to_server.connect(_on_connected_to_server)
@@ -102,7 +117,7 @@ func on_authentication_success(character_data: Dictionary) -> void:
 
 ## RPC: Autenticação falhou
 @rpc("authority", "call_remote", "reliable")
-func authentication_failed(reason: String) -> void:
+func on_authentication_failed(reason: String) -> void:
 	is_authenticated = false
 	authentication_failed.emit(reason)
 	print("Falha na autenticação: ", reason)

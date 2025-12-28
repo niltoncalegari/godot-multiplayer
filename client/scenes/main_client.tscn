@@ -1,0 +1,66 @@
+[gd_scene load_steps=10 format=3 uid="uid://client_main_scene"]
+
+[ext_resource type="Script" path="res://client/scripts/connection_client.gd" id="1_connection_client"]
+[ext_resource type="PackedScene" uid="uid://cvl4jsitsxp0u" path="res://ui/ui.tscn" id="2_ui"]
+[ext_resource type="PackedScene" uid="uid://enpjmjm7ayyu" path="res://levels/hub_level.tscn" id="3_hub_level"]
+[ext_resource type="PackedScene" uid="uid://2ne27phhv0kl" path="res://user_data/user_data_manager.tscn" id="4_user_data"]
+[ext_resource type="Script" uid="uid://ccjxxprksl8a3" path="res://voip/voip_manager.gd" id="5_voip"]
+[ext_resource type="PackedScene" uid="uid://bjywb13vy4hl4" path="res://voip/voip_user.tscn" id="6_voip_user"]
+[ext_resource type="Script" uid="uid://c80b7p8uwqx3y" path="res://voip/microphone.gd" id="7_mic"]
+[ext_resource type="PackedScene" path="res://client/scenes/login_ui.tscn" id="8_login_ui"]
+[ext_resource type="Script" path="res://client/scripts/ui/auth_ui_manager.gd" id="9_auth_manager"]
+[ext_resource type="Script" uid="uid://4k8fb5pxls8n" path="res://main/player_spawner.gd" id="10_player_spawner"]
+[ext_resource type="PackedScene" uid="uid://ciqrpd5675boy" path="res://player/player.tscn" id="11_player_scene"]
+
+[sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_1"]
+
+[node name="Main" type="Node"]
+
+[node name="ConnectionClient" type="Node" parent="."]
+script = ExtResource("1_connection_client")
+port = 5050
+host = "localhost"
+use_localhost_in_editor = true
+
+[node name="UserDataManager" parent="." instance=ExtResource("4_user_data")]
+
+[node name="VoipManager" type="Node" parent="." node_paths=PackedStringArray("player_spawner")]
+script = ExtResource("5_voip")
+user_scn = ExtResource("6_voip_user")
+player_spawner = NodePath("../PlayerSpawner")
+
+[node name="Microphone" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamMicrophone_1")
+autoplay = true
+bus = &"Record"
+script = ExtResource("7_mic")
+
+[node name="UI" parent="." instance=ExtResource("2_ui")]
+hide_ui_and_connect = false
+
+[node name="LoginUI" parent="." instance=ExtResource("8_login_ui")]
+
+[node name="AuthUIManager" type="Node" parent="."]
+script = ExtResource("9_auth_manager")
+connection_client = NodePath("../ConnectionClient")
+login_ui = NodePath("../LoginUI")
+main_ui = NodePath("../UI")
+
+[node name="Players" type="Node3D" parent="."]
+
+[node name="PlayerSpawner" type="MultiplayerSpawner" parent="." node_paths=PackedStringArray("spawn_points")]
+_spawnable_scenes = PackedStringArray("uid://ciqrpd5675boy")
+spawn_path = NodePath("../Players")
+script = ExtResource("10_player_spawner")
+player_scene = ExtResource("11_player_scene")
+spawn_points = NodePath("../HubLevel/SpawnPoints")
+
+[node name="HubLevel" parent="." instance=ExtResource("3_hub_level")]
+
+[connection signal="connected" from="ConnectionClient" to="AuthUIManager" method="_on_connected"]
+[connection signal="disconnected" from="ConnectionClient" to="AuthUIManager" method="_on_disconnected"]
+[connection signal="authentication_required" from="ConnectionClient" to="AuthUIManager" method="_on_authentication_required"]
+[connection signal="authentication_success" from="ConnectionClient" to="AuthUIManager" method="_on_authentication_success"]
+[connection signal="authentication_failed" from="ConnectionClient" to="AuthUIManager" method="_on_authentication_failed"]
+[connection signal="connect_client" from="UI" to="ConnectionClient" method="start_client"]
+

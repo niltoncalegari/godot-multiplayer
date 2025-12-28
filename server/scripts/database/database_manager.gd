@@ -43,7 +43,7 @@ func initialize_database() -> void:
 		database_error.emit("Erro ao abrir banco de dados")
 		return
 	
-	# Configurar performance do SQLite
+	# Configurar performance do SQLite usando configurações externas
 	configure_sqlite()
 	
 	create_tables()
@@ -131,18 +131,20 @@ func create_tables() -> void:
 	create_indexes()
 
 func configure_sqlite() -> void:
-	# Configurar cache size para melhor performance
-	var cache_query = "PRAGMA cache_size = -%d" % DatabaseConfig.CACHE_SIZE
+	# Configurar cache size para melhor performance (usando configurações externas)
+	var cache_size = DatabaseConfig.get_cache_size()
+	var cache_query = "PRAGMA cache_size = -%d" % cache_size
 	execute_query(cache_query)
 	
 	# Configurar journal mode (WAL para melhor performance em leitura/escrita concorrente)
-	var journal_query = "PRAGMA journal_mode = %s" % DatabaseConfig.JOURNAL_MODE
+	var journal_mode = DatabaseConfig.get_journal_mode()
+	var journal_query = "PRAGMA journal_mode = %s" % journal_mode
 	execute_query(journal_query)
 	
 	# Habilitar foreign keys
 	execute_query("PRAGMA foreign_keys = ON")
 	
-	print("SQLite configurado: cache_size=%dKB, journal_mode=%s" % [DatabaseConfig.CACHE_SIZE, DatabaseConfig.JOURNAL_MODE])
+	print("SQLite configurado: cache_size=%dKB, journal_mode=%s" % [cache_size, journal_mode])
 
 func create_indexes() -> void:
 	var indexes = [
