@@ -1,2 +1,13 @@
 # Godot 4+ specific ignores
 .godot/
+
+# Build outputs
+builds/
+*.app
+*.exe
+*.x86_64
+*.pck
+
+# Config files (use .example files instead)
+server_config.json
+client_config.json

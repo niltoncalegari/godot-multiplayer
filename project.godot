@@ -12,7 +12,7 @@ config_version=5
 
 config/name="MutliplayerTemplate"
 config/tags=PackedStringArray("thegates")
-run/main_scene="res://main/main.tscn"
+run/main_scene="res://client/scenes/main_client.tscn"
 config/features=PackedStringArray("4.5", "Forward Plus")
 boot_splash/bg_color=Color(0.129412, 0.14902, 0.180392, 1)
 config/icon="res://icon.png"
@@ -112,6 +112,7 @@ menu={
 
 [rendering]
 
+textures/vram_compression/import_etc2_astc=true
 anti_aliasing/quality/msaa_3d=1
 environment/defaults/default_clear_color=Color(0.129412, 0.14902, 0.180392, 1)
 anti_aliasing/quality/screen_space_aa=1
