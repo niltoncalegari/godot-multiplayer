@@ -1,5 +1,7 @@
 extends Control
 
+const ConnectionBase = preload("res://shared/classes/connection_base.gd")
+
 @export var user_data_events: UserDataEvents
 @export var label: Label
 @export var speaking_indicator: Control
@@ -11,7 +13,7 @@ var user_data: UserData
 
 
 func _ready() -> void:
-	if Connection.is_server() or is_multiplayer_authority():
+	if ConnectionBase.is_server() or is_multiplayer_authority():
 		set_visible(false)
 		set_process(false)
 		return

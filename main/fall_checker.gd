@@ -1,6 +1,8 @@
 extends Node
 class_name FallChecker
 
+const ConnectionBase = preload("res://shared/classes/connection_base.gd")
+
 @export var fall_height: float
 @export var player_spawner: PlayerSpawner
 
@@ -9,7 +11,7 @@ var players = {} # {Peer ID: Player}
 
 
 func _ready() -> void:
-	if not Connection.is_server(): return
+	if not ConnectionBase.is_server(): return
 	
 	timer = Timer.new()
 	add_child(timer)

@@ -132,3 +132,4 @@ docker exec -it godot-multiplayer-data sh -c "if command -v sqlite3 >/dev/null 2
 - Use `find` para localizar o arquivo
 - Verifique se o servidor realmente criou o banco
 
+

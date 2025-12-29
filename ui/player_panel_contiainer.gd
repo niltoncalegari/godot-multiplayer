@@ -1,5 +1,7 @@
 extends VBoxContainer
 
+const ConnectionBase = preload("res://shared/classes/connection_base.gd")
+
 @export var user_data_events: UserDataEvents
 @export var player_panel: PackedScene
 
@@ -23,6 +25,6 @@ func user_data_despawned(id: int) -> void:
 
 
 func on_visibility_changed() -> void:
-	if not is_visible_in_tree() and not Connection.is_peer_connected:
+	if not is_visible_in_tree() and not ConnectionBase.is_peer_connected:
 		for child in get_children():
 			child.queue_free()

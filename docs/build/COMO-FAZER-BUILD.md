@@ -1,7 +1,7 @@
 # 🚀 Como Fazer o Build
 
 > ⚠️ **IMPORTANTE**: Este projeto requer **Godot 4.5 ou superior**.
-> Se você está usando uma versão anterior, veja o guia: **[ATUALIZAR-GODOT.md](ATUALIZAR-GODOT.md)**
+> Se você está usando uma versão anterior, veja o guia: **[ATUALIZAR-GODOT.md](./ATUALIZAR-GODOT.md)**
 
 ## ⚡ Passo 1: Configurar Presets no Godot
 
@@ -26,7 +26,7 @@
 ## ⚡ Passo 2: Executar o Build
 
 ```bash
-./FAZER-BUILD.sh
+./scripts/FAZER-BUILD.sh
 ```
 
 O script vai:
@@ -96,7 +96,7 @@ cd builds/client
 
 **Erro: "format version (6) or engine version (4.5) which are not supported"**
 → Você está usando uma versão do Godot anterior à 4.5. Este projeto requer **Godot 4.5+**.
-- **Solução**: Veja o guia completo: **[ATUALIZAR-GODOT.md](ATUALIZAR-GODOT.md)**
+- **Solução**: Veja o guia completo: **[ATUALIZAR-GODOT.md](./ATUALIZAR-GODOT.md)**
 - Ou reimporte os assets no editor (pode não resolver todos os problemas)
 
 **Erro: "get_godot_version2 not found" ou "GDExtension initialization function returned an error"**

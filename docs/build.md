@@ -217,3 +217,4 @@ Para build em Docker, veja `docs/docker-sqlite.md` e `DOCKER.md`.
 - O banco de dados será criado automaticamente se não existir
 - Para desenvolvimento, use o editor do Godot diretamente
 
+

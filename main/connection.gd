@@ -1,6 +1,8 @@
 extends Node
 class_name Connection
 
+const ConnectionBase = preload("res://shared/classes/connection_base.gd")
+
 signal connected
 signal disconnected
 
@@ -13,14 +15,14 @@ static var is_peer_connected: bool
 
 
 func _ready() -> void:
-	if Connection.is_server(): start_server()
+	if ConnectionBase.is_server(): start_server()
 	connected.connect(func(): Connection.is_peer_connected = true)
 	disconnected.connect(func(): Connection.is_peer_connected = false)
 	disconnected.connect(disconnect_all)
 
 
 static func is_server() -> bool:
-	return "--server" in OS.get_cmdline_args()
+	return ConnectionBase.is_server()
 
 
 func start_server() -> void:

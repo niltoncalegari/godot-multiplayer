@@ -104,3 +104,4 @@ Banco de dados SQLite inicializado com sucesso
 **Cliente não conecta**
 → Verifique IP/porta em `client_config.json` e se servidor está rodando
 
+

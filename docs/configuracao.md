@@ -126,3 +126,4 @@ Isso criará `server_config.json` e `client_config.json` na raiz do projeto com 
 - Alterações nos arquivos requerem reinicialização do servidor/cliente
 - Em produção, coloque os arquivos de configuração no mesmo diretório do executável
 
+

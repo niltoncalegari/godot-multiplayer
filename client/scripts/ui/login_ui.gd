@@ -149,3 +149,4 @@ func clear_fields() -> void:
 	if register_confirm_password:
 		register_confirm_password.text = ""
 
+

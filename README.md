@@ -1,6 +1,9 @@
 # Godot Multiplayer - MMORPG
 
-Projeto de MMORPG inspirado no MuOnline, desenvolvido em Godot 4 com sistema de multiplayer cliente/servidor.
+Projeto de MMORPG inspirado no MuOnline, desenvolvido em **Godot 4.5+** com sistema de multiplayer cliente/servidor.
+
+> ⚠️ **Requisito**: Este projeto requer **Godot 4.5 ou superior**. 
+> Se você está usando uma versão anterior, veja: [docs/build/ATUALIZAR-GODOT.md](docs/build/ATUALIZAR-GODOT.md)
 
 ## 🎮 Sobre o Projeto
 
@@ -12,6 +15,27 @@ Este projeto está sendo desenvolvido como um MMORPG com:
 - Persistência de dados em banco de dados
 - Separação cliente/servidor em executáveis distintos
 
+## 🚀 Início Rápido
+
+1. **Verificar versão do Godot:**
+   ```bash
+   ./scripts/VERIFICAR-VERSAO.sh
+   ```
+
+2. **Fazer build:**
+   ```bash
+   ./scripts/FAZER-BUILD.sh
+   ```
+
+3. **Executar:**
+   ```bash
+   # Terminal 1 - Servidor
+   cd builds/server && ./run_server.sh
+   
+   # Terminal 2 - Cliente
+   cd builds/client && ./run_client.sh
+   ```
+
 ## 📚 Documentação
 
 Toda a documentação do projeto está na pasta [`docs/`](./docs/):
@@ -21,6 +45,8 @@ Toda a documentação do projeto está na pasta [`docs/`](./docs/):
 - **[Regras do Projeto](./docs/regras-projeto.md)** - Convenções e padrões de código
 - **[Features](./docs/features.md)** - Roadmap e status das features
 - **[Guia de Migração](./docs/migracao.md)** - Guia para migrar código existente
+- **[Como Fazer Build](./docs/build/COMO-FAZER-BUILD.md)** - Guia de build passo a passo
+- **[Atualizar Godot](./docs/build/ATUALIZAR-GODOT.md)** - Guia para atualizar para Godot 4.5+
 
 ## 🏗️ Estrutura do Projeto
 

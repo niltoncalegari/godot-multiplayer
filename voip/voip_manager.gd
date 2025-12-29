@@ -1,5 +1,7 @@
 extends Node
 
+const ConnectionBase = preload("res://shared/classes/connection_base.gd")
+
 @export var user_scn: PackedScene
 @export var player_spawner: PlayerSpawner
 @export var denoise_mic_input: bool = true
@@ -18,7 +20,7 @@ func _ready() -> void:
 	print("Denoiser available: ", denoiser_available)
 	print_audio_server_info()
 	
-	if Connection.is_server(): return
+	if ConnectionBase.is_server(): return
 	multiplayer.peer_connected.connect(peer_connected)
 	multiplayer.peer_disconnected.connect(peer_disconnected)
 	player_spawner.player_spawned.connect(player_spawned)
@@ -50,7 +52,7 @@ func player_spawned(id: int, player: Player) -> void:
 
 
 func _process(_delta: float) -> void:
-	if not Connection.is_peer_connected: return
+	if not ConnectionBase.is_peer_connected: return
 	if multiplayer.is_server(): return
 	
 	var accumulated_opusdata: Array[PackedByteArray] = []
@@ -71,7 +73,7 @@ func _process(_delta: float) -> void:
 
 
 func should_send_opus_data() -> bool:
-	return Microphone.is_speaking and Connection.is_peer_connected and not multiplayer.is_server()
+	return Microphone.is_speaking and ConnectionBase.is_peer_connected and not multiplayer.is_server()
 
 
 @rpc("any_peer", "call_remote", "unreliable_ordered", 1)

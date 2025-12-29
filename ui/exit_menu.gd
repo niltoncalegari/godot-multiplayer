@@ -43,6 +43,11 @@ func _on_exit_pressed() -> void:
 func quit_game() -> void:
 	# Desconectar do servidor se estiver conectado
 	if ConnectionBase.is_peer_connected:
+		# Tentar desconectar via ConnectionClient se disponível
+		var connection_client = get_node_or_null("/root/MainClient/ConnectionClient")
+		if connection_client and connection_client.has_method("disconnect_all"):
+			connection_client.disconnect_all()
+		# Fallback para Connection antigo (se ainda existir)
 		var connection = get_node_or_null("/root/Main/Connection")
 		if connection and connection.has_method("disconnect_all"):
 			connection.disconnect_all()

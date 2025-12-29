@@ -115,3 +115,4 @@ docker exec -it godot-multiplayer-data ls -lh /app/server_data/
 - Verificar permissões
 - Verificar se o caminho está correto
 
+

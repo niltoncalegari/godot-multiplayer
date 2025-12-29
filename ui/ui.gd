@@ -1,5 +1,7 @@
 extends Control
 
+const ConnectionBase = preload("res://shared/classes/connection_base.gd")
+
 signal start_server
 signal connect_client
 
@@ -7,7 +9,7 @@ signal connect_client
 
 
 func _ready():
-	if Connection.is_server(): return
+	if ConnectionBase.is_server(): return
 	
 	if hide_ui_and_connect:
 		connect_client_emit()

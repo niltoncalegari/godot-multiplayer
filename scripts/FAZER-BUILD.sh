@@ -14,32 +14,59 @@ NC='\033[0m'
 echo -e "${BLUE}=== Build Automatizado - Godot Multiplayer ===${NC}"
 echo ""
 
+# Obter diretório do script e do projeto
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_DIR="$( cd "$SCRIPT_DIR/.." && pwd )"
+
+# Mudar para o diretório raiz do projeto
+cd "$PROJECT_DIR"
+
+# Verificar se estamos no diretório correto do projeto
+echo -e "${YELLOW}Verificando diretório do projeto...${NC}"
+if [ ! -f "project.godot" ]; then
+    echo -e "${RED}Erro: Diretório do projeto não encontrado ou inválido${NC}"
+    echo "Esperado: $PROJECT_DIR"
+    echo "Certifique-se de que o arquivo project.godot existe no diretório."
+    exit 1
+fi
+
+echo -e "${GREEN}✓ Diretório do projeto: $(pwd)${NC}"
+echo ""
+
 # Função para encontrar Godot
 find_godot() {
     local godot_path=""
     
-    # Tentar locais comuns no macOS
-    if [ -f "/Applications/Godot.app/Contents/MacOS/Godot" ]; then
-        godot_path="/Applications/Godot.app/Contents/MacOS/Godot"
-    elif [ -f "/Applications/Godot_mono.app/Contents/MacOS/Godot" ]; then
-        godot_path="/Applications/Godot_mono.app/Contents/MacOS/Godot"
-    elif command -v godot &> /dev/null; then
+    # Tentar locais comuns no macOS (ordem de prioridade)
+    # Prioridade para versões mais recentes (4.5+)
+    local possible_paths=(
+        "/Applications/Godot_4.5.app/Contents/MacOS/Godot"
+        "/Applications/Godot_4.5_mono.app/Contents/MacOS/Godot"
+        "/Applications/Godot.app/Contents/MacOS/Godot"
+        "/Applications/Godot_mono.app/Contents/MacOS/Godot"
+        "/Users/niltoncalegari/Downloads/Godot_mono.app/Contents/MacOS/Godot"
+        "$HOME/Applications/Godot_4.5.app/Contents/MacOS/Godot"
+        "$HOME/Applications/Godot_4.5_mono.app/Contents/MacOS/Godot"
+        "$HOME/Applications/Godot.app/Contents/MacOS/Godot"
+        "$HOME/Applications/Godot_mono.app/Contents/MacOS/Godot"
+        "$HOME/Downloads/Godot_mono.app/Contents/MacOS/Godot"
+        "$HOME/Downloads/Godot.app/Contents/MacOS/Godot"
+        "$HOME/.local/share/godot/Godot"
+        "/usr/local/bin/godot"
+        "/opt/godot/Godot"
+    )
+    
+    # Procurar nos caminhos possíveis
+    for path in "${possible_paths[@]}"; do
+        if [ -f "$path" ]; then
+            godot_path="$path"
+            break
+        fi
+    done
+    
+    # Se não encontrou, tentar o comando godot no PATH
+    if [ -z "$godot_path" ] && command -v godot &> /dev/null; then
         godot_path="godot"
-    else
-        # Tentar encontrar em outros locais
-        local possible_paths=(
-            "$HOME/Applications/Godot.app/Contents/MacOS/Godot"
-            "$HOME/.local/share/godot/Godot"
-            "/usr/local/bin/godot"
-            "/opt/godot/Godot"
-        )
-        
-        for path in "${possible_paths[@]}"; do
-            if [ -f "$path" ]; then
-                godot_path="$path"
-                break
-            fi
-        done
     fi
     
     echo "$godot_path"
@@ -71,13 +98,42 @@ fi
 echo -e "${YELLOW}Verificando versão do Godot...${NC}"
 VERSION=$("$GODOT_PATH" --version 2>&1 | head -1)
 echo "Versão: $VERSION"
+
+# Verificar compatibilidade de versão
+VERSION_MAJOR=$(echo "$VERSION" | cut -d'.' -f1)
+VERSION_MINOR=$(echo "$VERSION" | cut -d'.' -f2)
+
+if [ "$VERSION_MAJOR" -lt 4 ] || ([ "$VERSION_MAJOR" -eq 4 ] && [ "$VERSION_MINOR" -lt 5 ]); then
+    echo -e "${YELLOW}⚠️  AVISO: Este projeto foi desenvolvido para Godot 4.5+${NC}"
+    echo -e "${YELLOW}   Você está usando Godot $VERSION${NC}"
+    echo -e "${YELLOW}   Alguns recursos podem não funcionar corretamente:${NC}"
+    echo -e "${YELLOW}   - GDExtensions (SQLite, twovoip) podem falhar${NC}"
+    echo -e "${YELLOW}   - Arquivos GLB podem não carregar${NC}"
+    echo -e "${YELLOW}   - Recursos podem precisar ser reimportados${NC}"
+    echo ""
+    read -p "Deseja continuar mesmo assim? (s/N): " CONTINUE
+    if [[ ! "$CONTINUE" =~ ^[Ss]$ ]]; then
+        echo -e "${RED}Build cancelado. Por favor, atualize para Godot 4.5+${NC}"
+        exit 1
+    fi
+    echo ""
+fi
 echo ""
 
 # Criar diretórios
-echo -e "${YELLOW}Preparando diretórios...${NC}"
+echo -e "${YELLOW}Preparando diretórios de build...${NC}"
 mkdir -p builds/client
 mkdir -p builds/server/server_data
-echo -e "${GREEN}✓ Diretórios criados${NC}"
+
+if [ -d "builds/client" ] && [ -d "builds/server" ]; then
+    echo -e "${GREEN}✓ Diretórios criados:${NC}"
+    echo "  - builds/client"
+    echo "  - builds/server"
+    echo "  - builds/server/server_data"
+else
+    echo -e "${RED}Erro ao criar diretórios de build${NC}"
+    exit 1
+fi
 echo ""
 
 # Detectar plataforma
@@ -129,8 +185,14 @@ echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━�
 echo -e "${YELLOW}📦 Building Server...${NC}"
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 
-# Build do servidor
-"$GODOT_PATH" --headless --export-release "Server" "$SERVER_PATH" --headless 2>&1 | tee /tmp/godot_server_build.log
+# Tentar primeiro "server+headless" (nome correto), depois "Server"
+"$GODOT_PATH" --headless --export-release "server+headless" "$SERVER_PATH" --headless 2>&1 | tee /tmp/godot_server_build.log
+
+# Se falhar, tentar com o nome alternativo
+if [ ${PIPESTATUS[0]} -ne 0 ]; then
+    echo -e "${YELLOW}Tentando com preset 'Server'...${NC}"
+    "$GODOT_PATH" --headless --export-release "Server" "$SERVER_PATH" --headless 2>&1 | tee /tmp/godot_server_build.log
+fi
 
 if [ ${PIPESTATUS[0]} -eq 0 ]; then
     echo -e "${GREEN}✓ Server build concluído com sucesso!${NC}"
@@ -139,12 +201,16 @@ else
     echo -e "${RED}✗ Erro ao fazer build do Server${NC}"
     echo ""
     echo "Possíveis causas:"
-    echo "  1. Preset 'Server' não configurado no Godot"
+    echo "  1. Preset 'server+headless' ou 'Server' não configurado no Godot"
     echo "  2. Cena main_server.tscn não encontrada"
-    echo "  3. Export templates não instalados"
+    echo "  3. Export templates não instalados para esta versão"
+    echo "  4. Incompatibilidade de versão do Godot (projeto requer 4.5+)"
+    echo ""
+    echo "Verifique se os export templates estão instalados:"
+    echo "  No Godot: Editor → Manage Export Templates → Download"
     echo ""
     echo "Log do erro:"
-    tail -20 /tmp/godot_server_build.log
+    tail -30 /tmp/godot_server_build.log | grep -E "(ERROR|preset|template)" | head -10
     exit 1
 fi
 
@@ -179,16 +245,27 @@ echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━�
 echo -e "${GREEN}✅ BUILD CONCLUÍDO COM SUCESSO!${NC}"
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
-echo "📁 Arquivos gerados:"
+echo "📁 Arquivos gerados em: $(pwd)/builds/"
+echo ""
 echo "  Client: $CLIENT_PATH"
 echo "  Server: $SERVER_PATH"
+echo ""
+echo "📂 Estrutura de diretórios:"
+echo "  builds/"
+echo "  ├── client/       (arquivos do cliente)"
+echo "  └── server/       (arquivos do servidor)"
+echo "      └── server_data/  (banco de dados)"
 echo ""
 echo "🚀 Para executar:"
 echo ""
 echo "  Terminal 1 - Servidor:"
 if [ "$PLATFORM" == "macos" ]; then
-    echo "    ./builds/server/game_server.app/Contents/MacOS/game_server"
+    echo "    cd builds/server && ./run_server.sh"
+    echo "    # OU diretamente:"
+    echo "    ./builds/server/server.app/Contents/MacOS/MutliplayerTemplate"
 elif [ "$PLATFORM" == "linux" ]; then
+    echo "    cd builds/server && ./run_server.sh"
+    echo "    # OU diretamente:"
     echo "    ./builds/server/game_server.x86_64"
 else
     echo "    builds\\server\\game_server.exe"
@@ -196,8 +273,16 @@ fi
 echo ""
 echo "  Terminal 2 - Cliente:"
 if [ "$PLATFORM" == "macos" ]; then
+    echo "    cd builds/client && ./run_client.sh"
+    echo "    # OU diretamente:"
     echo "    open builds/client/game_client.app"
+    echo ""
+    echo "  ⚠️  IMPORTANTE: Se o cliente abrir e fechar imediatamente,"
+    echo "     execute pelo terminal para ver os erros:"
+    echo "     cd builds/client && ./run_client.sh"
 elif [ "$PLATFORM" == "linux" ]; then
+    echo "    cd builds/client && ./run_client.sh"
+    echo "    # OU diretamente:"
     echo "    ./builds/client/game_client.x86_64"
 else
     echo "    builds\\client\\game_client.exe"
